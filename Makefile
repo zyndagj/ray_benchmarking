@@ -21,6 +21,13 @@ all: Ray data
 
 Ray: Ray-$(I_MPI_CC)-avx2 Ray-$(I_MPI_CC)-avx2-novec-nosimd Ray-$(I_MPI_CC)-common-avx512 Ray-$(I_MPI_CC)-native
 
+Ray-cray: ray.tar.gz
+	mkdir $@_dir && tar -xzf $^ -C $@_dir
+	cd $@_dir && module swap PrgEnv-cray PrgEnv-gnu && $(MAKE) MPICXX=CC CXXFLAGS="-std=c++98 -O3 -march=native -fno-tree-vectorize" $(VAR) $(MT)
+	strip $@_dir/Ray
+	mv $@_dir/Ray $@
+	rm -rf $@_dir/
+
 data: huge_b.impatiens large_h.sapiens small_r.sphaeroides tiny_s.aureus 
 
 ray.tar.gz:
