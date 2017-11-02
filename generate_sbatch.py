@@ -47,7 +47,17 @@ def main():
 				OUT.write("wait\n")
 		else:
 			# PBS
-			print pbsHeader.format(J=jobName, N=N, PPN=args.ppn, A=args.A)
+			OUT.write(pbsHeader.format(J=jobName, N=N, PPN=args.ppn)+'\n')
+			OUT.write(retryAC+'\n')
+			for r in range(1, args.r+1):
+				for k in kList:
+					OF="out-%s-%s-%s-n%i-k%i-r%i"%(args.p, args.D, os.path.split(args.B)[1], nt, k, r)
+					config=confDir[args.D]+'/Ray.conf'
+					OUT.write("retry %s %s %s %i &\n" %(OF, args.B, config, nt))
+				if not args.s:
+					OUT.write("wait\n")
+			if args.s:
+				OUT.write("wait\n")
 		OUT.close()
 			
 confDir={'huge':'huge_b.impatiens', 'large':'large_h.sapiens', 'small':'small_r.sphaeroides', 'tiny':'tiny_s.aureus'}
@@ -58,7 +68,6 @@ pbsHeader='''#!/bin/bash
 ### set the job stdout and stderr
 #PBS -e {J}.$PBS_JOBID.e
 #PBS -o {J}.$PBS_JOBID.o
-#PBS -A {A}
 
 cd $PBS_O_WORKDIR
 '''
@@ -86,7 +95,7 @@ export -f retry
 '''
 retryAC = '''
 function retry {
-	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4; OFFSET=$5
+	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4
 	for i in {1..3}; do
 		[ -e ${OF} ] && rm -rf ${OF}*
 		( echo "-o ${OF} -k ${K}" && cat ${CONFIG} ) > ${OF}.conf
