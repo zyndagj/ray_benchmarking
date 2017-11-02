@@ -4,7 +4,7 @@ import sys, argparse, os
 from glob import glob
 
 def main():
-	parser = argparse.ArgumentParser(description="Performs log-fold analysis on bam files.")
+	parser = argparse.ArgumentParser(description="Generates SLURM scripts for running throughput Ray runs.")
 	parser.add_argument("--N", metavar="STR", help="Comma delimited string of node counts", type=str)
 	parser.add_argument("-A", metavar="STR", help="Allocation", type=str)
 	parser.add_argument("--ppn", metavar="INT", help="Processes per node", type=int)
@@ -14,7 +14,7 @@ def main():
 	parser.add_argument("-B", metavar="FILE", help="Ray binary to use", type=str, required=True)
 	parser.add_argument("--mpi", metavar="STR", help="MPI spawnder (ibrun or aprun)", required=True)
 	parser.add_argument("-D", metavar="TYPE", help="GAGE size (tiny, small..)", required=True)
-	parser.add_argument("-s", help="Run replicates separately", action='store_true')
+	parser.add_argument("-s", help="Run replicates simultaneously", action='store_true')
 	args = parser.parse_args()
 
 	for N in map(int, args.N.split(',')):
@@ -27,7 +27,7 @@ def main():
 		else:
 			nt=n/len(kList)
 		# Print header
-		jobName = "ray_%s_%ix%i"%(args.D, N, args.ppn)
+		jobName = "%s_%s_%ix%i"%(os.path.split(args.B)[1], args.D, N, args.ppn)
 		OUT = open(jobName+'.slurm', 'w') 
 		if args.p in set(('test1','normal','flat-quadrant','test2')):
 			# SLURM

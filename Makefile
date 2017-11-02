@@ -2,11 +2,13 @@ ifeq ($(I_MPI_CC), icc)
 	AR = xiar
 	CXF = -Wall -std=c++98 -O3 -ipo
 	EFA2 = -xCORE-AVX2
+	EFN = -xHOST
 	EFA2NV = -xCORE-AVX2 -no-vec -no-simd
 	EFA5 = -xCOMMON-AVX512
 else
 	AR = gcc-ar
 	CXF = -Wall -std=c++98 -O3 -flto -fwhole-program
+	EFN = -march=native
 	EFA2 = -march=broadwell -mtune=broadwell -ftree-vectorize
 	EFA2NV = -march=broadwell -mtune=broadwell -fno-tree-vectorize
 	EFA5 = -march=broadwell -mtune=skylake-avx512 -mavx512f -mavx512cd -ftree-vectorize
@@ -17,7 +19,7 @@ MT = clean showOptions Ray
 
 all: Ray data
 
-Ray: Ray-$(I_MPI_CC)-avx2 Ray-$(I_MPI_CC)-avx2-novec-nosimd Ray-$(I_MPI_CC)-common-avx512
+Ray: Ray-$(I_MPI_CC)-avx2 Ray-$(I_MPI_CC)-avx2-novec-nosimd Ray-$(I_MPI_CC)-common-avx512 Ray-$(I_MPI_CC)-native
 
 data: huge_b.impatiens large_h.sapiens small_r.sphaeroides tiny_s.aureus 
 
@@ -27,6 +29,13 @@ ray.tar.gz:
 	cd ray && git clone https://github.com/sebhtml/RayPlatform.git
 	cd ray && tar -czf ../$@ *
 	rm -rf ray
+
+Ray-$(I_MPI_CC)-native: ray.tar.gz
+	mkdir $@_dir && tar -xzf $^ -C $@_dir
+	cd $@_dir && $(MAKE) AR=$(AR) CXXFLAGS="$(CXF) $(EFN)" $(VAR) $(MT)
+	strip $@_dir/Ray
+	mv $@_dir/Ray $@
+	rm -rf $@_dir/
 
 Ray-$(I_MPI_CC)-avx2: ray.tar.gz
 	mkdir $@_dir && tar -xzf $^ -C $@_dir
