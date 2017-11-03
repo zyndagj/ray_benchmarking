@@ -49,5 +49,5 @@ for prefix in sorted(uPrefix):
 			ts = h*60*60+m*60+s
 			total += ts
 		if write:
-			oStr += "\t%i"%(ts,)
+			oStr += "\t%i"%(total,)
 	print oStr
