@@ -38,7 +38,7 @@ def main():
 				for k in kList:
 					OF="out-%s-%s-%s-n%i-k%i-r%i"%(args.p, args.D, os.path.split(args.B)[1], nt, k, r)
 					config=confDir[args.D]+'/Ray.conf'
-					OUT.write("retry %s %s %s %i %i &\n" %(OF, args.B, config, nt, offset))
+					OUT.write("retry %s %s %s %i %i %i &\n" %(OF, args.B, config, nt, k, offset))
 					offset += nt
 				if not args.s:
 					OUT.write("wait\n")
@@ -53,7 +53,7 @@ def main():
 				for k in kList:
 					OF="out-%s-%s-%s-n%i-k%i-r%i"%(args.p, args.D, os.path.split(args.B)[1], nt, k, r)
 					config=confDir[args.D]+'/Ray.conf'
-					OUT.write("retry %s %s %s %i &\n" %(OF, args.B, config, nt))
+					OUT.write("retry %s %s %s %i %i &\n" %(OF, args.B, config, nt, k))
 				if not args.s:
 					OUT.write("wait\n")
 			if args.s:
@@ -63,7 +63,7 @@ def main():
 confDir={'huge':'huge_b.impatiens', 'large':'large_h.sapiens', 'small':'small_r.sphaeroides', 'tiny':'tiny_s.aureus'}
 pbsHeader='''#!/bin/bash
 #PBS -l nodes={N}:ppn={PPN}:xe
-#PBS -l walltime=24:00:00
+#PBS -l walltime=4:00:00
 #PBS -N {J}
 ### set the job stdout and stderr
 #PBS -e {J}.$PBS_JOBID.e
@@ -83,7 +83,7 @@ slurmHeader='''#!/bin/bash
 '''
 retryIB = '''
 function retry {
-	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4; OFFSET=$5
+	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4; K=$5; OFFSET=$6
 	for i in {1..3}; do
 		[ -e ${OF} ] && rm -rf ${OF}*
 		( echo "-o ${OF} -k ${K}" && cat ${CONFIG} ) > ${OF}.conf
@@ -95,7 +95,7 @@ export -f retry
 '''
 retryAC = '''
 function retry {
-	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4
+	OF=$1; RAY=$2; CONFIG=$3; NTASKS=$4; K=$5
 	for i in {1..3}; do
 		[ -e ${OF} ] && rm -rf ${OF}*
 		( echo "-o ${OF} -k ${K}" && cat ${CONFIG} ) > ${OF}.conf
