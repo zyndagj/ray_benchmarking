@@ -80,7 +80,7 @@ tiny_s.aureus:
 		mv $${f} $${f}.fastq; \
 	done
 	cd $@ && for f in *_1_??.fastq; do \
-        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%%_1_*}_2_$${f##*_1_}"; \
+        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%_1_*}_2_$${f##*_1_}"; \
 	done > Ray.conf
 
 small_r.sphaeroides:
@@ -93,7 +93,7 @@ small_r.sphaeroides:
 		mv $${f} $${f}.fastq; \
 	done
 	cd $@ && for f in *_1_??.fastq; do \
-        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%%_1_*}_2_$${f##*_1_}"; \
+        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%_1_*}_2_$${f##*_1_}"; \
 	done > Ray.conf
 
 large_h.sapiens:
@@ -106,7 +106,7 @@ large_h.sapiens:
 		mv $${f} $${f}.fastq; \
 	done
 	cd $@ && for f in *_1_??.fastq; do \
-        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%%_1_*}_2_$${f##*_1_}"; \
+        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%_1_*}_2_$${f##*_1_}"; \
 	done > Ray.conf
 
 huge_b.impatiens:
@@ -119,7 +119,7 @@ huge_b.impatiens:
 		mv $${f} $${f}.fastq; \
 	done
 	cd $@ && for f in *_1_??.fastq; do \
-        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%%_1_*}_2_$${f##*_1_}"; \
+        	echo -e "-p\n\t$${PWD}/$${f}\n\t$${PWD}/$${f%_1_*}_2_$${f##*_1_}"; \
 	done > Ray.conf
 
 clean:
