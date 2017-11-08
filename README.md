@@ -65,16 +65,16 @@ usage: generate_sbatch.py [-h] [--N STR] [-A STR] [--ppn INT]
 ```
 
 | Arg | Example | Description |
-|:===:|:=======:|:============|
-|`--N`|`--N 2,4,8`| Comma delimited string of node counts |
-|`-A`|`-A allocation`| Scheduler allocation |
-|`--ppn`|`--ppn 68`| MPI processes per node |
-|`-k`|`-k 31,29,27`| Comma delimited string of k-mer sizes to run simultaneously (throughput) | 
-|`-p`|`-p normal`| Scheduler queue |
-|`-r`|`-r 3`| Number of times runs are repeated |
-|`-B`|`-B Ray-gcc-avx2`| Binary to use |
-|`-D`|`-D small`| Dataset to use (tiny, small, large, huge)|
-|`-s`|`-s`| Run replicates simultaneously |
+|:-:|:-----:|:---|
+| `--N` | `--N 2,4,8` | Comma delimited string of node counts |
+| `-A` | `-A allocation` | Scheduler allocation |
+| `--ppn` | `--ppn 68` | MPI processes per node |
+| `-k` | `-k 31,29,27` | Comma delimited string of k-mer sizes to run simultaneously \(throughput\) | 
+| `-p` | `-p normal` | Scheduler queue |
+| `-r` | `-r 3` | Number of times runs are repeated |
+| `-B` | `-B Ray-gcc-avx2` | Binary to use |
+| `-D` | `-D small` | Dataset to use \(tiny, small, large, huge\)|
+| `-s` | `-s` | Run replicates simultaneously |
 
 ## Compiling runtime
 
